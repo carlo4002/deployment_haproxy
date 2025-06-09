@@ -4,14 +4,14 @@
 
 - name: Configure HAProxy
   ansible.builtin.template:
-    src: haproxy.cfg.j2
-    dest: /etc/haproxy/haproxy.cfg
-    owner: root
-    group: root
+    src: templates/haproxy.cfg.j2
+    dest: "{{ haproxy_config_path }}"
+    owner: "{{ proxy_user }}"
+    group: "{{ proxy_group }}"
     mode: '0644'
 
 - name: Restart HAProxy
   ansible.builtin.service:
-    name: haproxy
+    name: "{{ proxy_user }}"
     state: restarted
     enabled: true

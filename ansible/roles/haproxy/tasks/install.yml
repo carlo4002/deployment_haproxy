@@ -1,4 +1,5 @@
 ---
+
 - name: Install HAProxy
   dnf:
     name: haproxy
