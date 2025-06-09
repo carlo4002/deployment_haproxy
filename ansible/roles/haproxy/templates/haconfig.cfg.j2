@@ -21,5 +21,7 @@
         option httpchk
         http-check expect status 200
         default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
-        "{{haproxy_server_postgres}}"
+        {%- for item in postgres_ips -%}
+        server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008{%- if not loop.last %},{% endif %}
+        {%- endfor -%}
         
