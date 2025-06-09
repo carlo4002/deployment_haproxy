@@ -1,5 +1,8 @@
 
-
+proxy_user: haproxy
+proxy_group: haproxy
+haproxy_config_path: /etc/haproxy/haproxy.cfg
+haproxy_user_home: /var/lib/haproxy
 haproxy_server_postgres: >-
   {%- for item in postgres_ips -%}
   server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008{%- if not loop.last %},{% endif %}
