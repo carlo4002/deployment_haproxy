@@ -1,9 +1,9 @@
     # Simple configuration for an HTTP proxy listening on port 7000 on all
     
     global
-	log /dev/log    local0  info
-	chroot /var/lib/haproxy     
-	user haproxy                
+	    log /dev/log    local0  info
+	    chroot /var/lib/haproxy     
+	    user haproxy                
     	group haproxy               
     	daemon                      
     defaults
@@ -27,7 +27,7 @@
         option tcp-check
         tcp-check connect port 8008
         
-        http-check send GET /primary HTTP/1.0\r\nHost:\ localhost\r\n
+        http-check send GET /primary 
         http-check expect status 200  
         default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
         {%- for item in postgres_ips -%}
