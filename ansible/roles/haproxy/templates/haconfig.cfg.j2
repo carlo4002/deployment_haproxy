@@ -26,11 +26,15 @@
 
         option tcp-check
         tcp-check connect port 8008
+
+	option httpchk
         
-        http-check send GET /primary 
-        http-check expect status 200  
+        http-check send meth GET uri /primary ver HTTP/1.0 hdr Host localhost
+        http-check expect status 200
+	timeout check 5s
+  
         default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
 {% for item in postgres_ips %}
-        server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008{%- if not loop.last %},{% endif %}
+        server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008
 {% endfor %}
         
