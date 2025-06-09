@@ -21,12 +21,16 @@
 
     listen postgres
         bind *:5432
-	mode tcp 
+        mode tcp
+        balance roundrobin
+
         option tcp-check
-	timeout check 5s 
-    	tcp-check connect port 8008
-	default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
-{% for item in postgres_ips %}
-	server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008
-{% endfor %}
+        tcp-check connect port 8008
+        
+        http-check send GET /primary HTTP/1.0\r\nHost:\ localhost\r\n
+        http-check expect status 200  
+        default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+        {%- for item in postgres_ips -%}
+        server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008{%- if not loop.last %},{% endif %}
+        {%- endfor -%}
         
