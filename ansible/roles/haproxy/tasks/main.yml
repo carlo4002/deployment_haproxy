@@ -1,0 +1,17 @@
+- name: Install PostgreSQL
+  ansible.builtin.include_tasks:
+    file: install.yml
+
+- name: Configure HAProxy
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart HAProxy
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+    enabled: true

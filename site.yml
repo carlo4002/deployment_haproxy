@@ -1,0 +1,14 @@
+---
+- name: Start Haproxy
+  # This playbook sets up PostgreSQL, Patroni, and etcd on all hosts.
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Gather EC2 facts
+      amazon.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+      register: ec2_facts
+
+  roles:
+    - common
+    - haproxy

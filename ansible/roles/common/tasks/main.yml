@@ -1,0 +1,23 @@
+---
+- name: Ensure the haproxy user exists
+  user:
+    name: "{{ proxy_user }}"
+    state: present
+    shell: /bin/bash
+    create_home: yes
+
+- name: Ensure haproxy user has correct permissions
+  file:
+    path: /var/lib/haproxy
+    state: directory
+    owner: "{{ proxy_user }}"
+    group: "{{ proxy_group }}"
+    mode: '0700'
+
+- name: Install boto3 and botocore via pip
+  ansible.builtin.pip:
+    name:
+      - boto3
+      - botocore
+    executable: pip3
+  become: true
