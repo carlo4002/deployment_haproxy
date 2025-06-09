@@ -4,8 +4,6 @@
   hosts: all
   gather_facts: true
 
-  vars_files:
-    - vars/main.yml
   tasks:
     - name: Gather EC2 facts
       amazon.aws.ec2_instance_info:

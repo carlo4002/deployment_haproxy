@@ -1,4 +1,4 @@
-- name: Install PostgreSQL
+- name: Install HAProxy
   ansible.builtin.include_tasks:
     file: install.yml
 
@@ -12,6 +12,6 @@
 
 - name: Restart HAProxy
   ansible.builtin.service:
-    name: "{{ proxy_user }}"
+    name: haproxy.service
     state: restarted
     enabled: true
