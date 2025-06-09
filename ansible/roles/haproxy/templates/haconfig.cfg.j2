@@ -1,15 +1,18 @@
     # Simple configuration for an HTTP proxy listening on port 7000 on all
     
     global
-        maxconn 256
-
+	log /dev/log    local0  info
+	chroot /var/lib/haproxy     
+	user haproxy                
+    	group haproxy               
+    	daemon                      
     defaults
         log global
         mode http
         timeout connect 5000ms
         timeout client 50000ms
         timeout server 50000ms
-        retties 3
+        retries 3
     listen stats
         mode http
         bind *:7000
@@ -18,10 +21,12 @@
 
     listen postgres
         bind *:5432
-        option httpchk
-        http-check expect status 200
-        default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
-        {%- for item in postgres_ips -%}
-        server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008{%- if not loop.last %},{% endif %}
-        {%- endfor -%}
+	mode tcp 
+        option tcp-check
+	timeout check 5s 
+    	tcp-check connect port 8008
+	default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+{% for item in postgres_ips %}
+	server {{ item.name }} {{ item.ip }}:5432 maxconn 100 check port 8008
+{% endfor %}
         
